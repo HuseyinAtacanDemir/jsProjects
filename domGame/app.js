@@ -2,14 +2,14 @@
 GAME RULES:
 
 - The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
+- In each turn, a player rolls two dice as many times as he whishes. Each result get added to his ROUND score
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
+- The first player to reach target many points on GLOBAL score wins the game
 
 */
 
-var globalScoreArr, currentScore, currentPlayerID, lastDice, target;
+var globalScoreArr, currentScore, currentPlayerID, /*lastDice,*/ target;
 
 document.addEventListener('DOMContentLoaded', initialize, false);
 
@@ -49,22 +49,32 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 
     if(globalScoreArr[1] < target && globalScoreArr[0] < target){
         
-        var dice = Math.floor(Math.random() * 6) + 1;
-        var diceDOM = document.querySelector('.dice');
+        var dice0 = Math.floor(Math.random() * 6) + 1;
+        var dice1 = Math.floor(Math.random() * 6) + 1;
+        var dice0dom = document.getElementById('dice-0');
+        var dice1dom = document.getElementById('dice-1');
 
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice + '.png';
+        dice0dom.style.display = 'block';
+        dice1dom.style.display = 'block';
 
-        if(dice !== 1 && !(lastDice === 6 && lastDice === dice)){
+        dice0dom.src = 'dice-' + dice0 + '.png';
+        dice1dom.src = 'dice-' + dice1 + '.png';
 
-            currentScore += dice;
+        if(!(dice0 === 1 || dice1 === 1) && !(dice0 === 6 && dice1 === 6)){
+
+            currentScore += (dice0 + dice1);
             document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
-            lastDice = dice;
+            //lastDice = dice;
 
         } else { 
 
             currentScore = 0;
-            lastDice = 0;
+            //lastDice = 0;
+
+            if(dice0 === dice1 === 6){
+                globalScoreArr[currentPlayerID] = 0;
+                document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
+            }
 
             document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
 
@@ -83,10 +93,12 @@ function initialize(){
     globalScoreArr = [0,0];
     currentScore = 0;
     currentPlayerID = 0;
-    lastDice = 0;
+    //lastDice = 0;
     target = prompt('Enter Target Score');
 
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-0').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+
 
     for(const s of ['score-0', 'score-1', 'current-0', 'current-1'])
         document.getElementById(s).textContent = 0;
