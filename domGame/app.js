@@ -17,6 +17,11 @@ currentPlayerID = 0;
 
 document.querySelector('.dice').style.display = 'none';
 
+document.getElementById('score-0').textContent = 0;
+document.getElementById('score-1').textContent = 0;
+
+document.getElementById('current-0').textContent = 0;
+document.getElementById('current-1').textContent = 0;
 
 document.querySelector('.btn-new').addEventListener('click', function(){
 
@@ -26,62 +31,68 @@ document.querySelector('.btn-new').addEventListener('click', function(){
 
     document.querySelector('.dice').style.display = 'none';
 
-    document.querySelector('#current-0').textContent = currentScore;
-    document.querySelector('#current-1').textContent = currentScore;
+    document.getElementById('current-0').textContent = currentScore;
+    document.getElementById('current-1').textContent = currentScore;
 
-    document.querySelector('#score-0').textContent = currentScore;
-    document.querySelector('#score-1').textContent = currentScore;
+    document.getElementById('score-0').textContent = currentScore;
+    document.getElementById('score-1').textContent = currentScore;
+
+    
     
 });
 
 document.querySelector('.btn-hold').addEventListener('click', function(){
 
-    var prevScore = 0;
-    document.querySelector('#current-' + currentPlayerID).textContent = 0;
-    prevScore = parseInt(document.querySelector('#score-' + currentPlayerID).textContent, 10);
-    currentScore += prevScore;
-    document.querySelector('#score-' + currentPlayerID).textContent = currentScore;
-    currentScore = 0;
+    if(currentScore !== 0 && globalScoreArr[0] < 100 && globalScoreArr[1] < 100){
 
-    if(currentPlayerID === 0){
-        //document.querySelector('.player-0-panel active').className = 'player-0-panel';
-        //document.querySelector('.player-1-panel').className = 'player-1-panel active';
-        currentPlayerID = 1;
-    } else {
-        //document.querySelector('.player-1-panel active').setClassName = 'player-1-panel';
-        //document.querySelector('.player-0-panel').className = 'player-0-panel active';
-        currentPlayerID = 0;
+        globalScoreArr[currentPlayerID] += currentScore;
+        document.querySelector('#current-' + currentPlayerID).textContent = 0;
+        
+        document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
+        currentScore = 0;
+
+        if(globalScoreArr[currentPlayerID] >= 100){
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('winner');
+        } else {
+
+        document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+
+        currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
+
+        document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
+
+        }
     }
 
 });
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
 
-    var dice = Math.floor(Math.random() * 6) + 1;
+    if(globalScoreArr[1] < 100 && globalScoreArr[0] < 100){
+        var dice = Math.floor(Math.random() * 6) + 1;
 
-    var diceDOM = document.querySelector('.dice');
+        var diceDOM = document.querySelector('.dice');
 
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';
+        diceDOM.style.display = 'block';
+        diceDOM.src = 'dice-' + dice + '.png';
 
-    if(dice != 1){
+        if(dice !== 1){
 
-        currentScore += dice;
-        document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+            currentScore += dice;
+            document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
 
-    } else { 
+        } else { 
 
-        currentScore = 0;
-        document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+            currentScore = 0;
+            document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
 
-        if(currentPlayerID === 0){
-            //document.querySelector('.player-0-panel active').className = 'player-0-panel';
-            //document.querySelector('.player-1-panel').className = 'player-1-panel active';
-            currentPlayerID = 1;
-        } else {
-            //document.querySelector('.player-1-panel active').setClassName = 'player-1-panel';
-            //document.querySelector('.player-0-panel').className = 'player-0-panel active';
-            currentPlayerID = 0;
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+            //or we could have said toggle for both players
+
+            currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
+
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
         }
     }
 });
