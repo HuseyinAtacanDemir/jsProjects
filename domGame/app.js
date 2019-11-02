@@ -36,6 +36,22 @@ document.querySelector('.btn-new').addEventListener('click', function(){
 
 document.querySelector('.btn-hold').addEventListener('click', function(){
 
+    var prevScore = 0;
+    document.querySelector('#current-' + currentPlayerID).textContent = 0;
+    prevScore = parseInt(document.querySelector('#score-' + currentPlayerID).textContent, 10);
+    currentScore += prevScore;
+    document.querySelector('#score-' + currentPlayerID).textContent = currentScore;
+    currentScore = 0;
+
+    if(currentPlayerID === 0){
+        //document.querySelector('.player-0-panel active').className = 'player-0-panel';
+        //document.querySelector('.player-1-panel').className = 'player-1-panel active';
+        currentPlayerID = 1;
+    } else {
+        //document.querySelector('.player-1-panel active').setClassName = 'player-1-panel';
+        //document.querySelector('.player-0-panel').className = 'player-0-panel active';
+        currentPlayerID = 0;
+    }
 
 });
 
