@@ -1,20 +1,20 @@
 /*
 GAME RULES:
-
 - The game has 2 players, playing in rounds
-- In each turn, a player rolls two dice as many times as he whishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach target many points on GLOBAL score wins the game
-
+- In each turn, a player rolls two dice as many times as he whishes. Each result get added to his CURRENT score
+- BUT, if the player rolls a 1, all his CURRENT score gets lost; OR, if the player rolls two sixes at once, all his GLOBAL score gets lost. After that, it's the next player's turn.
+- The player can choose to 'Hold', which means that his CURRENT score gets added to his GLOBAL score. After that, it's the next player's turn
+- The first player to reach the target point on GLOBAL score wins the game
+- Then the players can initiate a new game.
 */
+var globalScoreArr, currentScore, currentPlayerID, target;
 
-var globalScoreArr, currentScore, currentPlayerID, /*lastDice,*/ target;
+document.addEventListener('DOMContentLoaded', initialize, false); //initialize game when webpage loads
 
-document.addEventListener('DOMContentLoaded', initialize, false);
+document.querySelector('.btn-new').addEventListener('click', initialize); //if new game is requested, initialize everything from scratch. (reset)
 
-document.querySelector('.btn-new').addEventListener('click', initialize);
-
+//increases the global score of current player by the currentScore of said player, 
+//then zeroes currentPlayer's currentScore and changes players
 document.querySelector('.btn-hold').addEventListener('click', function(){
 
     if(currentScore !== 0 && globalScoreArr[0] < target && globalScoreArr[1] < target){
@@ -22,31 +22,19 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         globalScoreArr[currentPlayerID] += currentScore;
         document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
 
-        currentScore = 0;
-        document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
-        
-
         if(globalScoreArr[currentPlayerID] >= target){
-
-            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+            changePlayer(1);
             document.getElementById('name-' + currentPlayerID).classList.add('winner');
             document.getElementById('name-' + currentPlayerID).textContent += ' wins!';
-
-        } else {
-
-            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
-
-            currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
-
-            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
-
+        }else{
+            changePlayer(0);
         }
     }
-
 });
 
+//clicking on the roll button increases the current players currentScore by the dice roll, 
+//zeroes the current score if player rolls any one's or two sixes, then cnages player turn.
 document.querySelector('.btn-roll').addEventListener('click', function() {
-
     if(globalScoreArr[1] < target && globalScoreArr[0] < target){
         
         var dice0 = Math.floor(Math.random() * 6) + 1;
@@ -61,44 +49,28 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         dice1dom.src = 'dice-' + dice1 + '.png';
 
         if(!(dice0 === 1 || dice1 === 1) && !(dice0 === 6 && dice1 === 6)){
-
             currentScore += (dice0 + dice1);
             document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
-            //lastDice = dice;
-
-        } else { 
-
-            currentScore = 0;
-            //lastDice = 0;
-
-            if(dice0 === dice1 === 6){
+        } else {
+            if(dice0 === 6 && dice1 === 6){
                 globalScoreArr[currentPlayerID] = 0;
                 document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
             }
-
-            document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
-
-            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
-            
-            currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
-
-            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
-            
+            changePlayer(0);
         }
     }
 });
-
+//initializes the data and the html objects. prompt the user to enter a target point and the names of the two players.
 function initialize(){
 
     globalScoreArr = [0,0];
     currentScore = 0;
     currentPlayerID = 0;
-    //lastDice = 0;
+
     target = prompt('Enter Target Score');
 
     document.getElementById('dice-0').style.display = 'none';
     document.getElementById('dice-1').style.display = 'none';
-
 
     for(const s of ['score-0', 'score-1', 'current-0', 'current-1'])
         document.getElementById(s).textContent = 0;
@@ -112,5 +84,16 @@ function initialize(){
     document.querySelector('.player-0-panel').classList.add('active');
     document.querySelector('.player-1-panel').classList.remove('active');
     
+}
+//changes player, makes the other player active only if the status is 0, status 1 means target was reached.
+function changePlayer(status){
 
+    currentScore = 0;
+    document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+    document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+    
+    if(status === 0){
+        currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
+        document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
+    }
 }
