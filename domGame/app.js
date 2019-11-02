@@ -8,3 +8,25 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
+/*
+// dom manipulations using querySelector:
+var globalScoreArr, currentScore, currentPlayerID, dice;
+
+globalScoreArr = [0,0];
+currentScore = 0;
+currentPlayerID = 0;
+
+dice = Math.floor(Math.random() * 6) + 1;
+
+//textContent can only change the text within an html tag. 
+document.querySelector('#current-' + currentPlayerID).textContent = dice;
+//innerhtml changes the html
+//document.querySelector('#current-' + currentPlayerID).innerHTML = '<em>' + dice + '</em>';
+
+//.textContent works both as a setter and a getter
+var x = document.querySelector('#score-0').textContent;
+console.log(x);
+
+//we can make the die invisible like this:
+//document.querySelector('.dice').style.display = 'none';
+*/
