@@ -7,7 +7,7 @@ GAME RULES:
 - The first player to reach the target point on GLOBAL score wins the game
 - Then the players can initiate a new game.
 */
-var globalScoreArr, currentScore, currentPlayerID, target;
+var globalScoreArr, currentScore, currentPlayerID, target, gameOn;
 
 document.addEventListener('DOMContentLoaded', initialize, false); //initialize game when webpage loads
 
@@ -17,15 +17,16 @@ document.querySelector('.btn-new').addEventListener('click', initialize); //if n
 //then zeroes currentPlayer's currentScore and changes players
 document.querySelector('.btn-hold').addEventListener('click', function(){
 
-    if(currentScore !== 0 && globalScoreArr[0] < target && globalScoreArr[1] < target){
+    if(currentScore !== 0 && gameOn){
 
         globalScoreArr[currentPlayerID] += currentScore;
         document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
 
         if(globalScoreArr[currentPlayerID] >= target){
             changePlayer(1);
-            document.getElementById('name-' + currentPlayerID).classList.add('winner');
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('winner');
             document.getElementById('name-' + currentPlayerID).textContent += ' wins!';
+            gameOn = false;
         }else{
             changePlayer(0);
         }
@@ -35,7 +36,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 //clicking on the roll button increases the current players currentScore by the dice roll, 
 //zeroes the current score if player rolls any one's or two sixes, then cnages player turn.
 document.querySelector('.btn-roll').addEventListener('click', function() {
-    if(globalScoreArr[1] < target && globalScoreArr[0] < target){
+    if(gameOn){
         
         var dice0 = Math.floor(Math.random() * 6) + 1;
         var dice1 = Math.floor(Math.random() * 6) + 1;
@@ -66,6 +67,7 @@ function initialize(){
     globalScoreArr = [0,0];
     currentScore = 0;
     currentPlayerID = 0;
+    gameOn = true;
 
     target = prompt('Enter Target Score');
 
@@ -75,19 +77,18 @@ function initialize(){
     for(const s of ['score-0', 'score-1', 'current-0', 'current-1'])
         document.getElementById(s).textContent = 0;
 
-    document.getElementById('name-0').classList.remove('winner');
-    document.getElementById('name-1').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('winner');
 
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.add('active');
+    
     document.getElementById('name-0').textContent = prompt('Enter First Player Name:');
     document.getElementById('name-1').textContent = prompt('Enter Second Player Name:');
-
-    document.querySelector('.player-0-panel').classList.add('active');
-    document.querySelector('.player-1-panel').classList.remove('active');
-    
 }
 //changes player, makes the other player active only if the status is 0, status 1 means target was reached.
 function changePlayer(status){
-
     currentScore = 0;
     document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
     document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
