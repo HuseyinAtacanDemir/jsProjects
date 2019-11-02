@@ -11,56 +11,33 @@ GAME RULES:
 
 var globalScoreArr, currentScore, currentPlayerID;
 
-globalScoreArr = [0,0];
-currentScore = 0;
-currentPlayerID = 0;
+document.addEventListener('DOMContentLoaded', initialize, false);
 
-document.querySelector('.dice').style.display = 'none';
-
-document.getElementById('score-0').textContent = 0;
-document.getElementById('score-1').textContent = 0;
-
-document.getElementById('current-0').textContent = 0;
-document.getElementById('current-1').textContent = 0;
-
-document.querySelector('.btn-new').addEventListener('click', function(){
-
-    globalScoreArr = [0,0];
-    currentScore = 0;
-    currentPlayerID = 0;
-
-    document.querySelector('.dice').style.display = 'none';
-
-    document.getElementById('current-0').textContent = currentScore;
-    document.getElementById('current-1').textContent = currentScore;
-
-    document.getElementById('score-0').textContent = currentScore;
-    document.getElementById('score-1').textContent = currentScore;
-
-    
-    
-});
+document.querySelector('.btn-new').addEventListener('click', initialize);
 
 document.querySelector('.btn-hold').addEventListener('click', function(){
 
     if(currentScore !== 0 && globalScoreArr[0] < 100 && globalScoreArr[1] < 100){
 
         globalScoreArr[currentPlayerID] += currentScore;
-        document.querySelector('#current-' + currentPlayerID).textContent = 0;
-        
         document.querySelector('#score-' + currentPlayerID).textContent = globalScoreArr[currentPlayerID];
+
         currentScore = 0;
+        document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+        
 
         if(globalScoreArr[currentPlayerID] >= 100){
+
             document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
             document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('winner');
+
         } else {
 
-        document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
 
-        currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
+            currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
 
-        document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
+            document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
 
         }
     }
@@ -70,8 +47,8 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 document.querySelector('.btn-roll').addEventListener('click', function() {
 
     if(globalScoreArr[1] < 100 && globalScoreArr[0] < 100){
+        
         var dice = Math.floor(Math.random() * 6) + 1;
-
         var diceDOM = document.querySelector('.dice');
 
         diceDOM.style.display = 'block';
@@ -88,8 +65,7 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
             document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
 
             document.querySelector('.player-' + currentPlayerID + '-panel').classList.remove('active');
-            //or we could have said toggle for both players
-
+            
             currentPlayerID === 0 ? currentPlayerID = 1 : currentPlayerID = 0;
 
             document.querySelector('.player-' + currentPlayerID + '-panel').classList.add('active');
@@ -97,4 +73,14 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     }
 });
 
+function initialize(){
 
+    globalScoreArr = [0,0];
+    currentScore = 0;
+    currentPlayerID = 0;
+    document.querySelector('.dice').style.display = 'none';
+
+    for(const s of ['score-0', 'score-1', 'current-0', 'current-1'])
+        document.getElementById(s).textContent = 0;
+
+}
