@@ -9,16 +9,6 @@ GAME RULES:
 
 */
 
-/****
- * 
- *   Events in JS
- */
-//events notify the code that an action was taken on the webpage. (click, resize, key pressed, etc.)
-//event listeners listen for events and handles them
-//event can only be processed when the exec stack is empty (other than Global x stack)
-//message queue: messages wait to be processed fifo.
-
-
 var globalScoreArr, currentScore, currentPlayerID;
 
 globalScoreArr = [0,0];
@@ -27,34 +17,47 @@ currentPlayerID = 0;
 
 document.querySelector('.dice').style.display = 'none';
 
-/*
-function rollDice(){
 
-}
-//handling roll dice button class = btn-roll
-document.querySelector('.btn-roll').addEventListener('click', rollDice);
+document.querySelector('.btn-new').addEventListener('click', function(){
 
-//this rollDice function is now called a callBack function, because it is not called by us, but by another function
+    globalScoreArr = [0,0];
+    currentScore = 0;
+    currentPlayerID = 0;
 
-*/
+    document.querySelector('.dice').style.display = 'none';
 
-//anonymous function looks like this: we cannot use it later, it only exists in this line
+    document.querySelector('#current-0').textContent = currentScore;
+    document.querySelector('#current-1').textContent = currentScore;
+
+    document.querySelector('#score-0').textContent = currentScore;
+    document.querySelector('#score-1').textContent = currentScore;
+    
+});
+
+document.querySelector('.btn-hold').addEventListener('click', function(){
+
+
+});
+
 document.querySelector('.btn-roll').addEventListener('click', function() {
-    //1: we need a random number
+
     var dice = Math.floor(Math.random() * 6) + 1;
 
-    //2: we need to display the result
     var diceDOM = document.querySelector('.dice');
 
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + dice + '.png';
-    //3: we need to update the currentScore of the currentPlayer, only if the rolled number was not a one.
+
     if(dice != 1){
+
         currentScore += dice;
         document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+
     } else { 
+
         currentScore = 0;
         document.querySelector('#current-' + currentPlayerID).textContent = currentScore;
+
         if(currentPlayerID === 0){
             //document.querySelector('.player-0-panel active').className = 'player-0-panel';
             //document.querySelector('.player-1-panel').className = 'player-1-panel active';
@@ -65,7 +68,6 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
             currentPlayerID = 0;
         }
     }
-
 });
 
 
