@@ -78,7 +78,7 @@ function initialize(){
         document.getElementById(s).textContent = 0;
 
     document.querySelector('.player-0-panel').classList.remove('winner');
-    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
 
     document.querySelector('.player-0-panel').classList.remove('active');
     document.querySelector('.player-1-panel').classList.remove('active');
